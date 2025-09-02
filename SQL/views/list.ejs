@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+    />
+    <title>Database</title>
+  </head>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    table,
+    td,
+    th {
+      border: 1.5px solid black;
+      border-collapse: collapse;
+      padding: 0.5rem;
+    }
+    .join {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      position: absolute;
+      left: 100%;
+      transform: translate(-200%, 100%);
+      cursor: pointer;
+    }
+    .join:hover {
+      color: gray;
+    }
+  </style>
+  <body>
+    <h3>DATABASE</h3>
+    <button class="join"><i class="fa-solid fa-plus"></i></button>
+    <table>
+      <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Contact</th>
+      </tr>
+      <% for(user of users) { %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.username %></td>
+        <td><%= user.email %></td>
+        <td><button class="edit" id="<%= user.id %>">Edit</button></td>
+      </tr>
+      <% } %>
+    </table>
+
+    <script>
+      const join = document.querySelector(".join");
+      join.addEventListener("click", () => {
+        window.location.href = "/new";
+      });
+
+      const editBtns = document.querySelectorAll(".edit");
+      for (let editBtn of editBtns) {
+        editBtn.addEventListener("click", () => {
+          window.location.href = `/${editBtn.id}/edit`;
+        });
+      }
+    </script>
+  </body>
+</html>

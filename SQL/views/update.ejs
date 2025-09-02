@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    div {
+      display: flex;
+      flex-direction: column;
+    }
+    input {
+      width: 300px;
+      height: 15px;
+      border-radius: 20px;
+      padding: 10px;
+    }
+    button {
+      width: 320px;
+      height: 50px;
+      border-radius: 25px;
+      background-color: yellowgreen;
+      cursor: pointer;
+    }
+    button:active {
+      background-color: rgb(197, 226, 138);
+    }
+
+    .usrnm_err,
+    .pswrd_err {
+      color: red;
+      font-size: smaller;
+    }
+  </style>
+  <body>
+    <h2>@<%= username %></h2>
+    <form action="/<%= id %>/edit?_method=PATCH" method="POST">
+      <div>
+        <input
+          type="text"
+          placeholder="New username"
+          name="username"
+          class="userInp"
+          required
+        />
+        <span class="usrnm_err"></span>
+      </div>
+      <div>
+        <input
+          type="password"
+          placeholder="Enter Password"
+          name="password"
+          class="passInp"
+          required
+        />
+        <span class="pswrd_err"></span>
+      </div>
+      <button type="submit" class="submit">Update</button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <script>
+      const userInp = document.querySelector(".userInp");
+      const passInp = document.querySelector(".passInp");
+      const usrnm_err = document.querySelector(".usrnm_err");
+      const pswrd_err = document.querySelector(".pswrd_err");
+      const button = document.querySelector("button");
+      const username = "<%= username %>";
+      const id = "<%= id %>";
+
+      userInp.addEventListener("input", () => {
+        if (userInp.value == username) {
+          usrnm_err.innerText =
+            "New username cannot match the current username";
+        } else {
+          usrnm_err.innerText = "";
+        }
+      });
+
+      passInp.addEventListener("input", async () => {
+        pswrd_err.innerText = "";
+      });
+
+      button.addEventListener("click", async (event) => {
+        (usrnm_err.innerText = ""), (pswrd_err.innerText = "");
+
+        event.preventDefault();
+        if (userInp.value === "") {
+          usrnm_err.innerText = "This field cannot be empty";
+          return;
+        }
+        if (passInp.value === "") {
+          pswrd_err.innerText = "This field cannot be empty";
+          return;
+        }
+        try {
+          const response = await axios.post(`/check/${id}`, {
+            password: passInp.value,
+          });
+          const valid = response.data.valid;
+          if (!valid) {
+            pswrd_err.innerText = "Incorrect Password";
+            return;
+          }
+          event.target.closest("form").submit();
+        } catch (err) {
+          pswrd_err.innerText = "Server error while checking password";
+        }
+      });
+    </script>
+  </body>
+</html>
